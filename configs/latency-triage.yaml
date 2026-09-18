@@ -1,0 +1,32 @@
+# Latency triage run: why are customers seeing high latency?
+#
+# Model choice is deliberate. The gateway routes some models through more than
+# one cloud, so two pairs here are the SAME model on DIFFERENT hosting clouds.
+# That separates "this model is slow" from "this route is slow":
+#   claude-haiku-4-5  -> Anthropic first-party  vs  AWS Bedrock
+#   llama-3.3-70b     -> AWS Bedrock            vs  Together AI
+# azure/gpt-4o-mini is the Azure datapoint and the existing baseline.
+models:
+  - anthropic/claude-haiku-4-5-20251001
+  - bedrock/anthropic.claude-haiku-4-5-20251001-v1:0
+  - bedrock/meta.llama3-3-70b-instruct-v1:0
+  - together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo
+  - azure/gpt-4o-mini
+
+# ping isolates the gateway's own overhead floor from model/provider time.
+workloads:
+  - ping
+  - short_qa
+  - long_generation
+
+concurrency: [1, 4]
+
+requests_per_cell: 6
+warmup_requests: 1
+stream: true
+
+max_completion_tokens: null
+temperature: 0.0
+request_timeout: 120.0
+max_retries: 0
+seed: 1234
