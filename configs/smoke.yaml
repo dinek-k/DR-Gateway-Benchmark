@@ -1,0 +1,8 @@
+# Fast sanity run, ~8 requests total.
+models:
+  - azure/gpt-4o-mini
+workloads: [ping, short_qa]
+concurrency: [1, 2]
+requests_per_cell: 3
+warmup_requests: 1
+stream: true

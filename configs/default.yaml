@@ -1,0 +1,26 @@
+# Default benchmark matrix. Run with: lgbench run -c configs/default.yaml
+# Check `lgbench models` first and replace these with models your org has enabled.
+models:
+  - azure/gpt-4o-mini
+  - azure/gpt-4o-2024-11-20
+
+workloads:
+  - ping            # gateway overhead floor
+  - short_qa        # small prompt, short answer
+  - long_context    # ~4k token prompt
+  - long_generation # long answer, stresses streaming throughput
+
+concurrency: [1, 4, 8]
+
+requests_per_cell: 10
+warmup_requests: 2
+stream: true
+
+# null = each workload's own output budget
+max_completion_tokens: null
+temperature: 0.0
+request_timeout: 120.0
+
+# 0 so a measured latency is always a single attempt
+max_retries: 0
+seed: 1234
